@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Event;
+
 class EventController extends Controller
 {
     /**
@@ -31,6 +32,7 @@ class EventController extends Controller
         $validator = Validator::make($request->all(), [
             'event_name' => 'required|string|max:255',
             'event_detail' => 'required|string|max:255',
+            'event_type_id'=> 'required|numeric|exists:event_types,id',
         ]);
         if ($validator->fails()) {
             return response()->json($validator->messages(), 400);
@@ -38,6 +40,7 @@ class EventController extends Controller
         $event = Event::create([
             'event_name' => $request->get('event_name'),
             'event_detail' => $request->get('event_detail'),
+            'event_type_id' => $request->get('event_type_id'),
         ]);
         return response()->json(['message' => 'Event created', 'data' => $event], 200);
     }
